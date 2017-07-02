@@ -1,0 +1,116 @@
+--- # 测试数据文档开始
+# 接口名称
+name : 4.1 查询优惠券或审批列表（运营后台）
+api_name : couponAdmin/getCouponList
+project_name : marketing
+case1 :
+    case_name : test_query_coupon_list  #对应着testcase的名字
+    params :  #根据接口文档的入参填写
+      pageSize : 5
+      currentPage : 1
+      param :
+        listType : 1
+    verify_sql : SELECT count(1) from marketingdb.t_marketing_coupon where is_delete=0 ORDER BY coupon_id desc  ;
+
+
+case2 :
+    case_name : test_query_coupon_approval_list
+    params :
+      pageSize : 20
+      currentPage : 1
+      param :
+        listType : 2
+    verify_total_count_sql : SELECT count(1) from marketingdb.t_marketing_coupon where is_delete=0 and status in (2,3,4,5,6,7) ORDER BY coupon_id desc  ;
+    verify_been_approval_count_sql : SELECT count(1) from marketingdb.t_marketing_coupon where is_delete=0 and status in (3,4,5,6,7) ORDER BY coupon_id desc  ;
+    verify_not_approval_count_sql : SELECT count(1) from marketingdb.t_marketing_coupon where is_delete=0 and status in (2) ORDER BY coupon_id desc  ;
+
+
+case3 :
+    case_name : test_query_coupon_list_by_pageSize_and_currentPage
+    params :
+      pageSize : 3
+      currentPage : 2
+      param :
+        listType : 2
+
+case4 :
+    case_name : test_query_coupon_list_useScope
+    params :
+      pageSize : 5
+      currentPage : 1
+      param :
+        listType : 1
+        useScope : 3
+    verify_sql : SELECT count(1) from marketingdb.t_marketing_coupon where is_delete=0 and use_scope=3 ORDER BY coupon_id desc  ;
+
+
+case5 :
+    case_name : test_query_coupon_list_status
+    params :
+      pageSize : 5
+      currentPage : 1
+      param :
+        listType : 1
+        status : 3
+    verify_sql : SELECT count(1) from marketingdb.t_marketing_coupon where is_delete=0 and status=3 ORDER BY coupon_id desc  ;
+
+case6 :
+    case_name : test_query_coupon_list_couponName
+    params :
+      pageSize : 5
+      currentPage : 1
+      param :
+        listType : 1
+        couponName : 【并发】红包6
+    verify_sql : SELECT count(1) from marketingdb.t_marketing_coupon where is_delete=0 and coupon_name="【并发】红包6" ORDER BY coupon_id desc  ;
+
+case7 :
+    case_name : test_query_coupon_list_couponName_not_exsit
+    params :
+      pageSize : 5
+      currentPage : 1
+      param :
+        listType : 1
+        couponName : 【并发】红包67
+
+case8 :
+    case_name : test_query_coupon_list_couponId
+    params :
+      pageSize : 5
+      currentPage : 1
+      param :
+        listType : 1
+        couponId : 206
+
+case9 :
+    case_name : test_query_coupon_list_couponId_not_exist
+    params :
+      pageSize : 5
+      currentPage : 1
+      param :
+        listType : 1
+        couponId : 2063333333333
+
+case10 :
+    case_name : test_query_coupon_list_CouponEntity_not_exist
+    params :
+      pageSize : 5
+      currentPage : 1
+      param :
+        listType : 1
+        couponId : 2063333333333
+        couponName : 测试
+        status : 3
+        useScope : 1
+
+case11 :
+    case_name : test_query_coupon_list_CouponEntity_combine_params
+    params :
+      pageSize : 5
+      currentPage : 1
+      param :
+        listType : 1
+        status : 6
+        useScope : 3
+    verify_sql : SELECT count(1) from marketingdb.t_marketing_coupon where status=6 and use_scope=3  ORDER BY coupon_id desc ;
+

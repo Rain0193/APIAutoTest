@@ -1,0 +1,10 @@
+--- # 测试数据文档开始
+# 接口名称
+name : 4.3 查询优惠券详情（运营后台）
+api_name : /couponAdmin/getCouponDetail
+project_name : marketing
+case1 :
+    case_name : test_query_coupon_detail  #对应着testcase的名字
+    params :  #根据接口文档的入参填写
+      couponId : 215
+

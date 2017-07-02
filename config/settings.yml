@@ -1,0 +1,3 @@
+# 全局配置开关。# TODO  待完善。
+env : beta #默认beta，可切换为 dev fix。
+log_switch : True #日志默认开关

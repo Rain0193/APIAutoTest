@@ -1,0 +1,43 @@
+api_name: user/addReceiveAddress
+case1:
+  case_name: test_add_normal_address
+  params:
+    model:
+      address: 黄埔大道西78号恒大中心
+      areaId: 27793
+      cityId: 27731
+      consignee: 测试20170314110216
+      mobile: 13899990000
+      provinceId: 27730
+      streetId: 27806
+  verify1: 测试20170314110216
+  verify2: '13899990000'
+  teardown: update mimidb.t_mm_user_receive_address set is_delete=1 where user_id=1884251359479808
+case2:
+  case_name: test_add_address_using_special_symbol
+  params:
+    model:
+      address: 中英文符号~!@#$%^&*()_+-={}|][\;',./:"<>?~！@#￥%……&*（0-=-=【】、】；‘“：}{}”’）|？》《》
+      areaId: 27793
+      cityId: 27731
+      consignee: 。. ·新疆人名
+      mobile: 13688888888
+      provinceId: 27730
+      streetId: 27806
+case3:
+  case_name: test_add_max_address
+  params:
+    model:
+      address: 黄埔大道西78号恒大中心
+      areaId: 27793
+      cityId: 27731
+      consignee: 收货人
+      mobile: 13688888888
+      provinceId: 27730
+      streetId: 27806
+  teardown: update mimidb.t_mm_user_receive_address set is_delete=1 where user_id=1884251359479808
+  verify: 1000010
+name: 3.1 新增收货地址
+project_name: user
+suite_setup: update mimidb.t_mm_user_receive_address set is_delete=1 where user_id=1884251359479808
+  and is_delete=0

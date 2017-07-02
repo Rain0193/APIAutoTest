@@ -1,0 +1,12 @@
+#接口测试，数据库环境
+beta : #beta环境
+    host : 192.168.95.23
+    port : 3301
+    user_name : dev_user
+    password : dev_user123
+
+fix : #fix环境
+    host : 192.168.95.21
+    port : 3301
+    user_name : dev_user
+    password : dev_user123

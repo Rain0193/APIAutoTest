@@ -26,7 +26,6 @@
 6. pymysql
 7. pytest-html
 
-	详情查看：http://wiki.hd/pages/viewpage.action?pageId=8913637
 
 # 3 目录文件说明
 
@@ -67,7 +66,7 @@
                 cityId : 27731
                 areaId : 27793
                 streetId : 27806
-                address : 黄埔大道西78号恒大中心
+                address : 黄埔大道110号
                 consignee : 自动化测试收货人
                 mobile : 13688888888
         verify1 : 自动化测试收货人 #若有多个校验点，在字段后加数据标识，使用时对应改变。
@@ -256,12 +255,6 @@ fixture不仅可以做这种简单场景的工作，还可以组合、传递参�
      
 # 5. TODO
 
-    1. APITest项目自动部署，Jenkins集成，定时/手动执行。
-    2. 优化代码：环境、日志全局开关。
-    3. 操作Redis的封装及使用。
+    1. 优化代码：环境、日志全局开关。
+    2. 操作Redis的封装及使用。
     
-# 6. Bugs
-
-
-
-[更新记录](http://gitlab.hd/dengxh/APITest/blob/dev/CHANGELOG.md#版本记录)

@@ -11,15 +11,18 @@ import time
 import logging
 import os
 import inspect
+from  utils.base import LOG_SWITCH, LOG_LEVEL, PRINT_SWITCH
 
 
 class LogUtil( ):
     """
     日志处理类
     """
-    __default_level = logging.DEBUG  # 日志默认开启级别
-    __levels = { "debug": logging.DEBUG, "info": logging.INFO, "warning": logging.WARNING, "error": logging.ERROR,
-                 "critical": logging.CRITICAL }
+    __default_level = logging.DEBUG
+    __levels = { "DEBUG": logging.DEBUG, "INFO": logging.INFO, "WARNING": logging.WARNING, "ERROR": logging.ERROR,
+                 "CRITICAL": logging.CRITICAL }
+    __logger = None
+    __handler = None
 
     def __gen_log_name( self, level ):
         '''
@@ -28,7 +31,7 @@ class LogUtil( ):
         :return:
         '''
         parent_dir = os.path.dirname( os.path.dirname( os.path.abspath( __file__ ) ) )
-        name = "log-{}.".format( level ) + time.strftime( '%Y-%m-%d', time.localtime( ) ) + '.log'
+        name = "log-{}.".format( level.lower( ) ) + time.strftime( '%Y-%m-%d', time.localtime( ) ) + '.log'
         log_name = os.path.join( os.path.abspath( parent_dir ), "log" )
         log_final_name = os.path.join( os.path.abspath( log_name ), name )
         return log_final_name
@@ -39,26 +42,28 @@ class LogUtil( ):
         :param log_name: 日志名
         :return:
         '''
-        if (not (os.path.isfile( log_name ))):  # 若文件不存在
-            parent_dir = os.path.dirname( os.path.abspath( log_name ) )  # 日志文件的父级目录
-            if (not os.path.exists( parent_dir )):  # 若父级目录不存在，则需要先创建目录，否则报错
+        if (not (os.path.isfile( log_name ))):
+            parent_dir = os.path.dirname( os.path.abspath( log_name ) )
+            if (not os.path.exists( parent_dir )):
                 os.mkdir( parent_dir )
-        return logging.FileHandler( log_name )
+        return logging.FileHandler( log_name, encoding = "utf-8" )
 
-    def __log_config( self, level ):
+    def __log_config( self, LOG_LEVEL, log_name_level ):
         '''
         配置日志类
-        :param level:日志等级
+        :param LOG_LEVEL:总开关的日志等级
+        :param log_name_level: 日志名的等级
         :return:
         '''
-        logger = logging.getLogger( str( level ) )
-        # 设置日志默认等级。只有大于或等于默认等级时，才创建FileHandler
-        logger.setLevel( self.__default_level )
-        if self.__levels[
-            level ] >= self.__default_level:  # logging级别代表的数字。NOTSET:0 DEBUG:10 INFO:10 WARNING:10 ERROR:10 CRITICAL:10
-            if not logger.handlers:  # 若在该logger里已经有handler里则不添加，否则会出现重复写日志问题
-                logger.addHandler( self.__create_handler( self.__gen_log_name( level ) ) )
-        return logger
+        if LOG_SWITCH:
+            self.__logger = logging.getLogger( str( self.__levels[ log_name_level ] ) )
+            self.__logger.setLevel( self.__levels[ LOG_LEVEL ] )
+            # 若总开关等级小于等于日志名等级，才创建日志文件.DEBUG:10  INFO:20 WARNING:30 ERROR:40 CRITICAL:50
+            if self.__levels[ LOG_LEVEL ] <= self.__levels[ log_name_level ]:
+                if not self.__logger.handlers:
+                    self.__handler = self.__create_handler( self.__gen_log_name( log_name_level ) )
+                    self.__logger.addHandler( self.__handler )
+            return self.__logger
 
     def __format_message( self, level, message ):
         '''
@@ -67,69 +72,50 @@ class LogUtil( ):
         :param message:
         :return:
         '''
-        frame, filename, lineNo, functionName, code, unknowField = inspect.stack( )[ 2 ]  # 利用反射得到调用函数信息
+        frame, filename, lineNo, functionName, code, unknowField = inspect.stack( )[ 2 ]
         return "[%s][%s] %s" % (
-            time.strftime( '%Y-%m-%d %H:%M:%S', time.localtime( ) ), level,  message)
+            time.strftime( '%Y-%m-%d %H:%M:%S', time.localtime( ) ), level, message)
 
-    def debug( self, message, print_flag = True ):
-        '''
-        记录DEBUG日志
-        :param message:
-        :param print_flag:是否输出到控制台
-        :return:
-        '''
-        msg = self.__format_message( "debug", message )
-        self.__log_config( "debug" ).debug( msg )
+    def __recording( self, message, print_flag, level ):
+        msg = self.__format_message( level, message )
         if (print_flag):
             print( msg )
+        return msg
 
-    def info( self, message, print_flag = True ):
-        '''
-        记录DEBUG日志
-        :param message:
-        :param print_flag:是否输出到控制台
-        :return:
-        '''
-        msg = self.__format_message( "info", message )
-        self.__log_config( "info" ).info( msg )
-        if (print_flag):
-            print( msg )
+    def debug( self, message, print_flag = PRINT_SWITCH, level = "DEBUG" ):
+        msg = self.__recording( message, print_flag, level )
+        logger = self.__log_config( LOG_LEVEL, level )
+        if logger:
+            logger.debug( msg )
 
-    def warning( self, message, print_flag = True ):
-        '''
-        记录WARNING日志
-        :param message:
-        :param print_flag:是否输出到控制台
-        :return:
-        '''
-        msg = self.__format_message( "warning", message )
-        self.__log_config( "warning" ).warning( msg )
-        if (print_flag):
-            print( msg )
+    def info( self, message, print_flag = PRINT_SWITCH, level = "INFO" ):
+        msg = self.__recording( message, print_flag, level )
+        logger = self.__log_config( LOG_LEVEL, level )
+        if logger:
+            logger.info( msg )
 
-    def error( self, message, print_flag = True ):
-        '''
-        记录ERROR日志
-        :param message:
-        :param print_flag:是否输出到控制台
-        :return:
-        '''
-        msg = self.__format_message( "error", message )
-        self.__log_config( "error" ).error( msg )
-        if (print_flag):
-            print( msg )
+    def warning( self, message, print_flag = PRINT_SWITCH, level = "WARNING" ):
+        msg = self.__recording( message, print_flag, level )
+        logger = self.__log_config( LOG_LEVEL, level )
+        if logger:
+            logger.warning( msg )
 
-    def critical( self, message, print_flag = True ):
-        '''
-        记录CRITICAL日志
-        :param message:
-        :param print_flag:是否输出到控制台
-        :return:
-        '''
-        msg = self.__format_message( "critical", message )
-        self.__log_config( "critical" ).critical( msg )
-        if (print_flag):
-            print( msg )
+    def error( self, message, print_flag = PRINT_SWITCH, level = "ERROR" ):
+        msg = self.__recording( message, print_flag, level )
+        logger = self.__log_config( LOG_LEVEL, level )
+        if logger:
+            logger.error( msg )
+
+    def critical( self, message, print_flag = PRINT_SWITCH, level = "CRITICAL" ):
+        msg = self.__recording( message, print_flag, level )
+        logger = self.__log_config( LOG_LEVEL, level )
+        if logger:
+            logger.critical( msg )
 
 # log = LogUtil( )
-# log.debug( "debug test" )
+# print( logging.DEBUG )
+# print( logging.INFO )
+# print( logging.WARNING )
+# print( logging.ERROR )
+# print( logging.CRITICAL )
+# DEBUG:10  INFO:20 WARNING:30 ERROR:40 CRITICAL:50

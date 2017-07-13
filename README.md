@@ -66,7 +66,7 @@
                 cityId : 27731
                 areaId : 27793
                 streetId : 27806
-                address : 黄埔大道110号
+                address : 黄埔大道西78号恒大中心
                 consignee : 自动化测试收货人
                 mobile : 13688888888
         verify1 : 自动化测试收货人 #若有多个校验点，在字段后加数据标识，使用时对应改变。
@@ -248,13 +248,14 @@ fixture不仅可以做这种简单场景的工作，还可以组合、传递参�
 
 ## 4.3 项目代码管理说明
 
-    1. 在Git项目建自己的分支，以dev + 自己的名字拼音为分支名（如dev-dengxihong），代码来源于dev。dev是主开发分支，开发者没有合并权限。
+    1. 在Git项目建自己的分支，以dev + 自己的名字拼音为分支名（如dev-dengxihong），代码来源于master。master是主开发分支，开发者没有合并权限。
     2. 用source tree克隆代码时，在高级选项输入自己的分支名（如dev-dengxihong）。
-    3. 每次提交（commit）代码到本地仓库时，先拉取dev分支的代码。若拉取下来的代码跟自己的有冲突（软件会有提示或代码里会有<<<<<字样），需要解决冲突后，再推送（push）到自己的开发分支。
-    4. 推送到自己的分支后，在Merge Request --> New Merge Request -->源分支选择自己的分支（如dev-dengxihong），目标分支选dev --> 填写合并简要 --> dev的owner同意合并即完成代码合并。
-     
-# 5. TODO
+    3. 每次提交（commit）代码到本地仓库时，先拉取master分支的代码。若拉取下来的代码跟自己的有冲突（软件会有提示或代码里会有<<<<<字样），需要解决冲突后，再推送（push）到自己的开发分支（如dev-dengxihong）。
+    4. 推送到自己的分支后，在Merge Request --> New Merge Request -->源分支选择自己的分支（如dev-dengxihong），目标分支选master --> 填写合并简要 --> master的owner同意合并即完成代码合并。
 
-    1. 优化代码：环境、日志全局开关。
-    2. 操作Redis的封装及使用。
     
+# 6. Bugs
+
+
+
+[更新记录](CHANGELOG.md)

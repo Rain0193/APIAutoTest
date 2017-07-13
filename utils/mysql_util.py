@@ -12,12 +12,12 @@ import sys
 
 sys.path.append( os.path.dirname( os.path.abspath( __file__ ) ) )
 from file_util import FileUtil
-
+from  utils.base import ENV,DB
 
 class MysqlUtil:
-    __conn = None  # 数据库conn
-    __cur = None  # 游标
-    __instance = None  # 实例
+    __conn = None
+    __cur = None
+    __instance = None
 
     def __new__( cls, *args, **kwargs ):
         if not cls.__instance:
@@ -25,7 +25,7 @@ class MysqlUtil:
         return cls.__instance
 
     def __init__( self ):
-        db = self.__get_db_from_config( )  # 默认beta环境的数据库，若要修改，则在这里修改。
+        db = DB[ENV]
         if db is not None:
             self.__connect( db[ "host" ], db[ "port" ], db[ "user_name" ], db[ "password" ] )
 
@@ -40,16 +40,16 @@ class MysqlUtil:
         except:
             print( "释放MySQL资源出错！" )
 
-    def __get_db_from_config( self, env = "beta" ):
-        '''
-        从配置获取DB信息
-        :param env:
-        :return:
-        '''
-        base_dir = os.path.dirname( os.path.dirname( os.path.abspath( __file__ ) ) )
-        file = os.path.join( os.path.join( os.path.realpath( base_dir ), "config" ), "db.yml" )  # DB配置文件的绝对路径
-        db = FileUtil( ).connect_to( file ).parsed_data[ env ]
-        return db
+    # def __get_db_from_config( self, env = "beta" ):
+    #     '''
+    #     从配置获取DB信息
+    #     :param env:
+    #     :return:
+    #     '''
+    #     base_dir = os.path.dirname( os.path.dirname( os.path.abspath( __file__ ) ) )
+    #     file = os.path.join( os.path.join( os.path.realpath( base_dir ), "config" ), "db.yml" )  # DB配置文件的绝对路径
+    #     db = FileUtil( ).connect_to( file ).parsed_data[ env ]
+    #     return db
 
     def __connect( self, host, port, user, password, charset = 'utf8' ):
         '''

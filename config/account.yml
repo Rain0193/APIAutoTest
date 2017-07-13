@@ -9,9 +9,6 @@ beta : #beta环境
     NORMAL_YAOYAO : #业主端，瑶瑶
         user_name : 13636075013
         password : cy123456
-    NORMAL_LILI : #业主端，丽丽姐
-        user_name : 13600004002
-        password : qwe123
     SUPPLIER : #供应商，默认账号
         user_name : autotest01
         password : 123456

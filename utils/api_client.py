@@ -22,6 +22,7 @@ import traceback
 sys.path.append( os.path.dirname( os.path.abspath( __file__ ) ) )
 from file_util import FileUtil
 from log_util import LogUtil
+from  utils.base import ENV, ACCOUNTS
 
 
 class APIClient:
@@ -121,9 +122,9 @@ class APIClient:
                     pass
 
     @property
-    def NORMAL_TOKEN( self, env = "beta" ):
+    def NORMAL_TOKEN( self, env = ENV ):
         '''
-        通过get属性方式来访问私有变量__NORMAL_TOKEN   #默认业主端账号
+        默认业主端账号
         :param env:
         :return:
         '''
@@ -132,9 +133,9 @@ class APIClient:
         return self.__NORMAL_TOKEN
 
     @property
-    def NORMAL_TOKEN_XIAOMEI( self, env = "beta" ):
+    def NORMAL_TOKEN_XIAOMEI( self, env = ENV ):
         '''
-        通过get属性方式来访问私有变量__NORMAL_TOKEN_XIAOMEI  #小梅的业主端账号
+        小梅的业主端账号
         :param env:
         :return:
         '''
@@ -143,9 +144,9 @@ class APIClient:
         return self.__NORMAL_TOKEN_XIAOMEI
 
     @property
-    def NORMAL_TOKEN_YAOYAO( self, env = "beta" ):
+    def NORMAL_TOKEN_YAOYAO( self, env = ENV ):
         '''
-        通过get属性方式来访问私有变量__NORMAL_TOKEN_YAOYAO  #瑶瑶的业主端账号
+        瑶瑶的业主端账号
         :param env:
         :return:
         '''
@@ -154,20 +155,9 @@ class APIClient:
         return self.__NORMAL_TOKEN_YAOYAO
 
     @property
-    def NORMAL_TOKEN_LILI( self, env = "beta" ):
+    def SUPPLIER_TOKEN( self, env = ENV ):
         '''
-        通过get属性方式来访问私有变量__NORMAL_TOKEN_LILI  #丽丽姐的业主端账号
-        :param env:
-        :return:
-        '''
-        if self.__NORMAL_TOKEN_LILI == None:
-            self.__cal_different_account( env = env, login_type = self.LOGIN_TYPE_NORMAL, tester_account = "LILI" )
-        return self.__NORMAL_TOKEN_LILI
-
-    @property
-    def SUPPLIER_TOKEN( self, env = "beta" ):
-        '''
-        通过get属性方式来访问私有变量__SUPPLIER_TOKEN  #默认供应商账号
+        默认供应商账号
         :param env:
         :return:
         '''
@@ -176,9 +166,9 @@ class APIClient:
         return self.__SUPPLIER_TOKEN
 
     @property
-    def MANAGER_TOKEN( self, env = "beta" ):
+    def MANAGER_TOKEN( self, env = ENV ):
         '''
-        通过get属性方式来访问私有变量__MANAGER_TOKEN  #默认运营后台账号
+        默认运营后台账号
         :param env:
         :return:
         '''
@@ -187,9 +177,9 @@ class APIClient:
         return self.__MANAGER_TOKEN
 
     @property
-    def PMMANAGER_TOKEN( self, env = "beta" ):
+    def PMMANAGER_TOKEN( self, env = ENV ):
         '''
-        通过get属性方式来访问私有变量__PMMANAGER_TOKEN   #默认物业后台账号
+        默认物业后台账号
         :param env:
         :return:
         '''
@@ -198,9 +188,9 @@ class APIClient:
         return self.__PMMANAGER_TOKEN
 
     @property
-    def STAFF_TOKEN( self, env = "beta" ):
+    def STAFF_TOKEN( self, env = ENV ):
         '''
-        通过get属性方式来访问私有变量__PMMANAGER_TOKEN   #默认员工端账号
+        默认员工端账号
         :param env:
         :return:
         '''
@@ -208,9 +198,9 @@ class APIClient:
             self.__cal_different_account( env = env, login_type = self.LOGIN_TYPE_STAFF )
         return self.__STAFF_TOKEN
 
-    def cal_url( self, project_name, api_name, env = "beta" ):
+    def cal_url( self, project_name, api_name, env = ENV ):
         '''
-        生成最终请求的url，根据自己公司需要修改。
+        生成最终请求的url
         :param env: 环境，beta、fix
         :param project_name:工程名称
         :param api_name:接口名
@@ -221,12 +211,12 @@ class APIClient:
             api_name = api_name[ 1: ]
         return "http://" + env_url[ env ] + "." + project_name + "-api.hd/" + api_name
 
-    def cal_token( self, username, password, login_type = LOGIN_TYPE_NORMAL, env = "beta" ):
+    def cal_token( self, username, password, login_type = LOGIN_TYPE_NORMAL, env = ENV ):
         '''
         生成token
         :param username: 用户名
         :param password: 密码
-        :param login_type: 业主端：NORMAL，供应商：SUPPLIER，运营后台：MANAGER。物业后台：PMMANAGER。默认生成业主端的token。
+        :param login_type: 业主端：NORMAL，供应商：SUPPLIER，运营后台：MANAGER。物业后台：PMMANAGER。
         :param env:环境。beta、Fix。
         :return:
         '''
@@ -282,26 +272,12 @@ class APIClient:
             except:
                 LogUtil( ).error( "生成STAFF token出错！----" + traceback.format_exc( ) )
 
-    def __read_accounts( self, env = "beta" ):
-        '''
-        读取全局账号
-        :param env: 默认Beta环境
-        :return:
-        '''
-        base_dir = os.path.dirname( os.path.dirname( os.path.abspath( __file__ ) ) )
-        file = os.path.join( os.path.join( os.path.realpath( base_dir ), "config" ), "account.yml" )  # 全局账号文件的绝对路径
-        accounts = FileUtil( ).connect_to( file ).parsed_data
-        return accounts
-
     def cal_signature( self, params ):
         '''
         生成MD5加密过的签名
         :param params: Dict格式
         :return:
         '''
-        # 1.使用json解决传递的参数双引号会变成单引号问题。
-        # 2.使用separators参数解决字典转json后有空白字符的问题。
-        # 3.使用ensure_ascii=False解决中文会转成unicode的问题。
         try:
             if params == None:
                 params = { }
@@ -337,69 +313,58 @@ class APIClient:
         except:
             LogUtil( ).error( "生成密钥失败！----" + traceback.format_exc( ) )
 
-    def AES_encrypt( self, content, secret ):
+    def encrypt( self, content, secret, crypto_type ):
         '''
-        使用AES-128算法加密
-        :param content: 待加密内容
-        :param secret:  密钥
-        :return:
-        '''
-        BLOCK_SIZE = 16  # must be 16, 24, or 32 for AES。16（AES-128）、24（AES-192）、或32（AES-256）
-        pad = lambda s: s + (BLOCK_SIZE - len( s ) % BLOCK_SIZE) * chr(
-                BLOCK_SIZE - len( s ) % BLOCK_SIZE )  # 填充位数函数，填充成16位的倍数
-        try:
-            obj = AES.new( secret, AES.MODE_ECB )  # 使用密钥生成一个加密对象。
-            crypt = obj.encrypt( pad( content ) )  # 加密
-            return base64.b64encode( crypt ).decode( 'utf-8' )  # 最终生成base64编码的加密内容，并从byte类型decode回str
-        except:
-            LogUtil( ).error( "AES加密失败！----" + traceback.format_exc( ) )
-
-    def AES_decrypt( self, content, secret ):
-        '''
-        使用AES-128算法解密
-        :param content: 待解密内容，base64编码
-        :param secret: 密钥
-        :return:
-        '''
-        try:
-            content = base64.b64decode( content )  # 先把base64编码内容转换成字节码
-            obj = AES.new( secret, AES.MODE_ECB )  # 使用密钥生成一个加密对象。
-            return obj.decrypt( content ).decode( 'utf-8' )  # 解密，并从byte类型decode回str
-        except:
-            LogUtil( ).error( "AES解密失败！----" + traceback.format_exc( ) )
-
-    def DES3_encrypt( self, content, secret ):
-        '''
-        使用3DES算法加密
+        加密
         :param content: 待加密内容
         :param secret: 密钥
+        :param crypto_type: 加密类型
         :return:
         '''
+        if crypto_type == "AES":
+            BLOCK_SIZE = 16
+            pad = lambda s: s + (BLOCK_SIZE - len( s ) % BLOCK_SIZE) * chr(
+                    BLOCK_SIZE - len( s ) % BLOCK_SIZE )
+            try:
+                obj = AES.new( secret, AES.MODE_ECB )
+                crypt = obj.encrypt( pad( content ) )
+                return base64.b64encode( crypt ).decode( 'utf-8' )
+            except:
+                LogUtil( ).error( "AES加密失败！----" + traceback.format_exc( ) )
+        elif crypto_type == "3DES":
+            BLOCK_SIZE = 8
+            pad = lambda s: s + (BLOCK_SIZE - len( s ) % BLOCK_SIZE) * chr(
+                    BLOCK_SIZE - len( s ) % BLOCK_SIZE )
 
-        BLOCK_SIZE = 8  # 3DES用8位填充
-        pad = lambda s: s + (BLOCK_SIZE - len( s ) % BLOCK_SIZE) * chr(
-                BLOCK_SIZE - len( s ) % BLOCK_SIZE )  # 填充函数
+            try:
+                encryptor = DES3.new( secret, DES3.MODE_ECB )
+                crypt = encryptor.encrypt( pad( content ) )
+                return base64.b64encode( crypt ).decode( 'utf-8' )
+            except:
+                LogUtil( ).error( "3DES加密失败！----" + traceback.format_exc( ) )
 
-        try:
-            encryptor = DES3.new( secret, DES3.MODE_ECB )  # 使用密钥生成一个加密对象
-            crypt = encryptor.encrypt( pad( content ) )  # 加密
-            return base64.b64encode( crypt ).decode( 'utf-8' )  # 最终生成base64编码的加密内容，并从byte类型decode回str
-        except:
-            LogUtil( ).error( "3DES加密失败！----" + traceback.format_exc( ) )
-
-    def DES3_decrypt( self, content, secret ):
+    def decrypt( self, content, secret, crypto_type ):
         '''
-        使用3DES算法解密
-        :param content: 待解密内容，base64编码
+        解密
+        :param content: 待加密内容
         :param secret: 密钥
+        :param crypto_type: 加密类型
         :return:
         '''
-        try:
-            content = base64.b64decode( content )  # 先把base64编码内容转换成字节码
-            obj = DES3.new( secret, DES3.MODE_ECB )  # 使用密钥生成一个加密对象。
-            return obj.decrypt( content ).decode( 'utf-8' )  # 解密，并从byte类型decode回str
-        except:
-            LogUtil( ).error( "3DES解密失败！----" + traceback.format_exc( ) )
+        if crypto_type == "AES":
+            try:
+                content = base64.b64decode( content )
+                obj = AES.new( secret, AES.MODE_ECB )
+                return obj.decrypt( content ).decode( 'utf-8' ).strip( )
+            except:
+                LogUtil( ).error( "AES解密失败！----" + traceback.format_exc( ) )
+        elif crypto_type == "3DES":
+            try:
+                content = base64.b64decode( content )
+                obj = DES3.new( secret, DES3.MODE_ECB )
+                return obj.decrypt( content ).decode( 'utf-8' ).strip( )
+            except:
+                LogUtil( ).error( "3DES解密失败！----" + traceback.format_exc( ) )
 
     def http_post( self, url, params, token, login_type = LOGIN_TYPE_NORMAL, crypto_type = "3DES" ):
         '''
@@ -408,7 +373,7 @@ class APIClient:
         :param params: 请求参数，Dict类型
         :param login_type: token类型
         :param token: 登录的token
-        :param crypto_type: 加密方式，AES、3DES。默认为3DES。
+        :param crypto_type: 加密方式，
         :return: 返回解密后的response
         '''
         # 设置headers
@@ -444,99 +409,50 @@ class APIClient:
         if (isinstance( post_content, dict )):
             post_content = json.dumps( post_content, separators = (',', ':') )
 
-            if (crypto_type == "AES"):
-                # AES加密后的请求内容
-                secret = self.cal_secret( token, "AES" )
-                payload = self.AES_encrypt( post_content, secret )
+            # 加密后的请求内容
+            secret = self.cal_secret( token, crypto_type )
+            payload = self.encrypt( post_content, secret, crypto_type )
 
-                result = None
-                # 发送HTTP Post请求
+            result = None
+            # 发送HTTP Post请求
+            try:
+                response = requests.post( url, data = payload, headers = headers )
+                # 解析HTTP响应
                 try:
-                    response = requests.post( url, data = payload, headers = headers )
-                    # 解析HTTP响应
-                    try:
-                        if (response.status_code == 200):
-                            json_temp = json.loads( response.text )
-                            if (json_temp[ "msgCode" ] == 200):
-                                decrypt_result = self.AES_decrypt( str( json_temp[ "data" ] ), secret )
-                                s = re.compile( '[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]' ).sub( '', decrypt_result )
-                                result = json.loads( s )
-                                LogUtil( ).info( "解密结果：====>\n" + json.dumps( result, sort_keys = True,
-                                                                              ensure_ascii = False,
-                                                                              separators = (',', ':') ) )
-                            else:
-                                LogUtil( ).warning(
-                                        "warning的请求入参：====>\n" + url + "  " + json.dumps( params, sort_keys = True,
-                                                                                          ensure_ascii = False,
-                                                                                          separators = (',', ':') ) )
-                                LogUtil( ).warning( "msgCode不等于200：====>" + str( json_temp ) )
-                                return json_temp
+                    if (response.status_code == 200):
+                        json_temp = json.loads( response.text )
+                        if (json_temp[ "msgCode" ] == 200):
+                            decrypt_result = self.decrypt( str( json_temp[ "data" ] ), secret, crypto_type )
+                            s = re.compile( '[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]' ).sub( '', decrypt_result )
+                            result = json.loads( s )
+                            LogUtil( ).info( "解密结果：====>\n" + json.dumps( result, sort_keys = True,
+                                                                          ensure_ascii = False,
+                                                                          separators = (',', ':') ) )
                         else:
-                            LogUtil( ).error(
-                                    "error的请求入参：====>\n" + url + "  " + json.dumps( params, sort_keys = True,
-                                                                                    ensure_ascii = False,
-                                                                                    separators = (',', ':') ) )
-                            LogUtil( ).error( 'HTTP返回结果：=====>' + response.text )
-                    except:
+                            LogUtil( ).warning(
+                                    "warning的请求入参：====>\n" + url + "  " + json.dumps( params, sort_keys = True,
+                                                                                      ensure_ascii = False,
+                                                                                      separators = (',', ':') ) )
+                            LogUtil( ).warning( "msgCode不等于200：====>" + str( json_temp ) )
+                            return json_temp
+                    else:
                         LogUtil( ).error(
                                 "error的请求入参：====>\n" + url + "  " + json.dumps( params, sort_keys = True,
                                                                                 ensure_ascii = False,
                                                                                 separators = (',', ':') ) )
-                        LogUtil( ).error( "解析AES响应失败!----" + traceback.format_exc( ) )
+                        LogUtil( ).error( 'HTTP返回结果：=====>' + response.text )
                 except:
                     LogUtil( ).error(
                             "error的请求入参：====>\n" + url + "  " + json.dumps( params, sort_keys = True,
                                                                             ensure_ascii = False,
                                                                             separators = (',', ':') ) )
-                    LogUtil( ).error( "http请求失败！----" + traceback.format_exc( ) )
-                return result
-
-            elif (crypto_type == "3DES"):
-                # 3DES加密后的请求内容
-                secret = self.cal_secret( token, "3DES" )
-                payload = self.DES3_encrypt( post_content, secret )
-
-                # 发送HTTP Post请求
-                try:
-                    response = requests.post( url, data = payload, headers = headers )
-                    # 解析HTTP响应
-                    result = None
-                    try:
-                        if (response.status_code == 200):
-                            json_temp = json.loads( response.text )
-                            if (json_temp[ "msgCode" ] == 200):
-                                decrypt_result = self.DES3_decrypt( str( json_temp[ "data" ] ), secret )
-                                s = re.compile( '[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]' ).sub( '',
-                                                                                             decrypt_result )  # 过滤返回结果的转义字符
-                                result = json.loads( s )
-                                LogUtil( ).info(
-                                        "解密结果：====>\n" + json.dumps( result, sort_keys = True, ensure_ascii = False,
-                                                                     separators = (',', ':') ) )
-                            else:
-                                LogUtil( ).warning(
-                                        "warning的请求入参：====>\n" + url + "  " + json.dumps( params, sort_keys = True,
-                                                                                          ensure_ascii = False,
-                                                                                          separators = (',', ':') ) )
-                                LogUtil( ).warning( "msgCode不等于200：====>" + str( json_temp ) )
-                                return json_temp
-                        else:
-                            LogUtil( ).error(
-                                    "error的请求入参：====>\n" + url + "  " + json.dumps( params, sort_keys = True,
-                                                                                    ensure_ascii = False,
-                                                                                    separators = (',', ':') ) )
-                            LogUtil( ).error( 'HTTP返回结果：=====>' + response.text )
-                    except:
-                        LogUtil( ).error(
-                                "error的请求入参：====>\n" + url + "  " + json.dumps( params, sort_keys = True,
-                                                                                ensure_ascii = False,
-                                                                                separators = (',', ':') ) )
-                        LogUtil( ).error( "解析3DES响应失败!----" + traceback.format_exc( ) )
-                    return result
-                except:
-                    LogUtil( ).error(
-                            "error的请求入参：====>\n" + url + "  " + json.dumps( params, sort_keys = True,
-                                                                            ensure_ascii = False,
-                                                                            separators = (',', ':') ) )
-                    LogUtil( ).error( "http请求失败！----" + traceback.format_exc( ) )
+                    LogUtil( ).error( "解析'{}'密文失败!----".format( crypto_type ) + traceback.format_exc( ) )
+            except:
+                LogUtil( ).error(
+                        "error的请求入参：====>\n" + url + "  " + json.dumps( params, sort_keys = True,
+                                                                        ensure_ascii = False,
+                                                                        separators = (',', ':') ) )
+                LogUtil( ).error( "http请求失败！----" + traceback.format_exc( ) )
+            return result
         else:
             return "请求参数必须是Dict类型!"

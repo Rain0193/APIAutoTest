@@ -1,3 +1,5 @@
-# 全局配置开关。# TODO  待完善。
+# 全局配置开关。
 env : beta #默认beta，可切换为 dev fix。
-log_switch : True #日志默认开关
+log_switch : True #日志默认开关。True False
+log_level : INFO #默认日志等级。 DEBUG、INFO、WARNING、ERROR、CRITICAL
+print_switch : True #控制台及报告日志开关。True False

@@ -77,7 +77,7 @@ class FileUtil:
         with open( file_path, "w", encoding = "utf-8" ) as f:
             yaml.dump( test_data, f, default_flow_style = False, allow_unicode = True )
 
-    ##使用工厂方法处理文件，以便后面扩展
+
     class YAMLConnector:
         def __init__( self, file_path ):
             with open( file_path, "rb" )as f:

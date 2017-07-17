@@ -1,0 +1,76 @@
+--- # 测试数据文档开始
+# 接口名称
+name : 4.4 优惠券保存和提交审批（运营后台）
+api_name : /couponAdmin/addCoupon
+project_name : marketing
+case1 :
+    params :  #根据接口文档的入参填写
+      param :
+        couponName : 创建业务券成功-基本流程
+        codeType : 1
+        code : DDDDSSAA
+        couponType : 4
+        discountType : 1
+        useScope : 3
+        modelCode : 1001
+        number : 10
+        useType : 1
+        userType : 1
+        timeType : 1
+        startTime : 1500013997693
+        endTime : 1510369871000
+        receiveMethod : 1
+        limitNum : 1
+        totalAmount : 100000
+        discountAmount : 10000
+        remark : 这个是备注
+        status : 1
+    init_sql1 : UPDATE marketingdb.t_marketing_coupon c ,marketingdb.t_marketing_coupon_code cc set c.is_delete=1,cc.is_delete=1 where c.coupon_name like "%创建业务券成功-基本流程%" and c.coupon_id=cc.coupon_id;
+    init_sql2 : select cc.id from  marketingdb.t_marketing_coupon c ,marketingdb.t_marketing_coupon_code cc  where c.coupon_name like "%创建业务券成功-基本流程%" and c.coupon_id=cc.coupon_id;
+    init_sql3 : delete from marketingdb.t_marketing_coupon_code  where id={} ;
+
+
+case2 :
+    params :  #根据接口文档的入参填写
+      param :
+        couponName : 创建商家券成功-基本流程
+        codeType : 2
+        couponType : 2
+        discountType : 1
+        useScope : 2
+        number : 10
+        merchantId : 72
+        merchantName : APIAutoTest-勿动
+        useType : 1
+        userType : 1
+        timeType : 1
+        startTime : 1500013997693
+        endTime : 1510369871000
+        receiveMethod : 1
+        limitNum : 1
+        totalAmount : 10000
+        discountAmount : 1000
+        remark : 这个是备注
+        status : 1
+
+case3 :
+    params :  #根据接口文档的入参填写
+      param :
+        couponName : 创建业务券成功-基本流程
+        codeType : 2
+        couponType : 4
+        discountType : 1
+        useScope : 3
+        modelCode : 1004
+        number : 10
+        useType : 1
+        userType : 1
+        timeType : 1
+        startTime : 1500013997693
+        endTime : 1510369871000
+        receiveMethod : 1
+        limitNum : 1
+        totalAmount : 100000
+        discountAmount : 10000
+        remark : 这个是备注
+        status : 1

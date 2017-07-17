@@ -74,7 +74,7 @@ class LogUtil( ):
         '''
         frame, filename, lineNo, functionName, code, unknowField = inspect.stack( )[ 2 ]
         return "[%s][%s] %s" % (
-            time.strftime( '%Y-%m-%d %H:%M:%S', time.localtime( ) ), level, message)
+            time.strftime( '%Y-%m-%d %H:%M:%S', time.localtime( ) ), level.lower(), message)
 
     def __recording( self, message, print_flag, level ):
         msg = self.__format_message( level, message )

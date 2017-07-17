@@ -6,13 +6,13 @@ case1:
       address: 黄埔大道西78号恒大中心
       areaId: 27793
       cityId: 27731
-      consignee: 测试20170314110216
-      mobile: 13899990000
+      consignee: 测试20170717132418
+      mobile: '188398675204'
       provinceId: 27730
       streetId: 27806
-  verify1: 测试20170314110216
-  verify2: '13899990000'
   teardown: update mimidb.t_mm_user_receive_address set is_delete=1 where user_id=1884251359479808
+  verify1: 测试20170717132418
+  verify2: '188398675204'
 case2:
   case_name: test_add_address_using_special_symbol
   params:

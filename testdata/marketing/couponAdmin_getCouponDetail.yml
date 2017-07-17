@@ -6,5 +6,5 @@ project_name : marketing
 case1 :
     case_name : test_query_coupon_detail  #对应着testcase的名字
     params :  #根据接口文档的入参填写
-      couponId : 215
+      couponId : 1
 

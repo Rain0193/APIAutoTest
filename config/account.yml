@@ -9,6 +9,9 @@ beta : #beta环境
     NORMAL_YAOYAO : #业主端，瑶瑶
         user_name : 13636075013
         password : cy123456
+    NORMAL_XIAOAI : #业主端，小爱
+        user_name : 18501255494
+        password : 707017
     SUPPLIER : #供应商，默认账号
         user_name : autotest01
         password : 123456
@@ -16,14 +19,14 @@ beta : #beta环境
         user_name : autotestmanager01
         password : 123456
     PMMANAGER : #物业后台，默认总部账号
-        user_name : 18600002001
-        password : 123456
-    PMMANAGER_COMMUNITY : #物业后台，默认小区账号
-        user_name : 18600002001
-        password : 123456
+        user_name : 13888888888
+        password : q12345
+    PMMANAGER_COMMUNITY : #第一金碧后台，默认小区账号
+        user_name : 13888888880
+        password : q12345
     STAFF : #员工端，默认账号
-        user_name : 13660394444
-        password : 123456
+        user_name : 13888888881
+        password : q12345
 
 fix : #fix环境
     NORMAL : #业主端
